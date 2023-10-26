@@ -59,7 +59,24 @@ async function run() {
             const result = await orderCollection.insertOne(order);
             res.send(result)
         })
-
+        app.patch('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)}
+            const updateOrder = req.body;
+            const updateDoc = {
+                $set: {
+                    status: updateOrder.status,
+                }
+            }
+            const result = await orderCollection.updateOne(filter, updateDoc)
+            res.send(result)
+        })
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id
+            const cursor = {_id: new ObjectId(id)}
+            const result = await orderCollection.deleteOne(cursor)
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
